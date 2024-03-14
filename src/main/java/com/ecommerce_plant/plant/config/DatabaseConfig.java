@@ -1,4 +1,4 @@
-package com.ecommerce_plant.plant;
+package com.ecommerce_plant.plant.config;
 
 import javax.sql.DataSource;
 
