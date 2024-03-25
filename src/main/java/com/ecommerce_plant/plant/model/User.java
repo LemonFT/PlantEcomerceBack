@@ -23,5 +23,5 @@ public class User {
     private Date join_date;
     private int role_id;
     private boolean block;
-
+    private boolean deleted;
 }

@@ -13,7 +13,7 @@ import com.ecommerce_plant.plant.mapping.MessageMapping;
 import com.ecommerce_plant.plant.model.Message;
 import com.ecommerce_plant.plant.service.MessageService;
 
-@RequestMapping("api/message")
+@RequestMapping("")
 @RestController
 public class MessageApi {
     @Autowired
@@ -22,7 +22,7 @@ public class MessageApi {
     @Autowired
     MessageMapping messageMapping;
 
-    @GetMapping("/{user_id}")
+    @GetMapping("authenticed/api/message/{user_id}")
     public ResponseEntity<?> getAllMessageWithCustomer(@PathVariable int user_id) {
         List<Message> messages = messageService.getAllMessage(user_id);
         if (!messages.isEmpty()) {

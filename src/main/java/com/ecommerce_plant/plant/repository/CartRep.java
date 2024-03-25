@@ -17,7 +17,22 @@ public class CartRep {
     @SuppressWarnings("deprecation")
     public List<Cart> findAllCartsByUserId(int user_id) {
         String sql = "SELECT * FROM cart where user_id = ?";
-        return jdbcTemplate.query(sql, new Object[] { user_id }, BeanPropertyRowMapper.newInstance(Cart.class));
+        try {
+            return jdbcTemplate.query(sql, new Object[] { user_id }, BeanPropertyRowMapper.newInstance(Cart.class));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public Cart checkExistProduct(int user_id, int product_id) {
+        try {
+            String sql = "SELECT * FROM cart where user_id = ? and product_id = ?";
+            return jdbcTemplate.queryForObject(sql, new Object[] { user_id, product_id },
+                    BeanPropertyRowMapper.newInstance(Cart.class));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public boolean insertCart(Cart cart) {
@@ -33,5 +48,10 @@ public class CartRep {
     public boolean deleteCart(int userId, int productId) {
         String sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
         return jdbcTemplate.update(sql, userId, productId) > 0;
+    }
+
+    public boolean deleteAllCartByUser(int userId) {
+        String sql = "DELETE FROM cart WHERE user_id = ?";
+        return jdbcTemplate.update(sql, userId) > 0;
     }
 }

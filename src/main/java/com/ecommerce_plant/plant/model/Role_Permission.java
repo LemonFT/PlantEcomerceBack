@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactUser {
-    private int user_id;
-    private String address_category;
-    private String address;
-    private String phone_number;
+public class Role_Permission {
+    private int role_id;
+    private int permission_id;
 }

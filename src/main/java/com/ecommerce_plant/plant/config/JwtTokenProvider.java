@@ -1,13 +1,14 @@
 package com.ecommerce_plant.plant.config;
 
 import java.security.Key;
-import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.ecommerce_plant.plant.mapping.modelmapping.JwtToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -32,6 +33,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
     }
@@ -65,6 +67,45 @@ public class JwtTokenProvider {
                 .parseClaimsJws(jwt);
 
         return claimsJws.getBody();
+    }
+
+    public JwtToken refreshTokens(String jwt) {
+        System.err.println("refresh token start");
+        Dotenv env = Dotenv.configure().load();
+        String keySecret = env.get("REACT_APP_SECRETKEY");
+        Key secretKey = Keys.hmacShaKeyFor(keySecret.getBytes());
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwt);
+        Claims claims = claimsJws.getBody();
+        int id = claims.get("id", Integer.class);
+        String name = claims.get("uname", String.class);
+        String email = claims.get("email", String.class);
+        int role = claims.get("role", Integer.class);
+        return new JwtToken(createJWT(id, name, email, role, false), createJWT(id, name, email, role, true));
+    }
+
+    public String getUsernameFromToken(String jwt) {
+        Dotenv env = Dotenv.configure().load();
+        String keySecret = env.get("REACT_APP_SECRETKEY");
+        Key secretKey = Keys.hmacShaKeyFor(keySecret.getBytes());
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwt);
+        return claimsJws.getBody().get("uname", String.class);
+    }
+
+    public int getUserIDFromToken(String jwt) {
+        Dotenv env = Dotenv.configure().load();
+        String keySecret = env.get("REACT_APP_SECRETKEY");
+        Key secretKey = Keys.hmacShaKeyFor(keySecret.getBytes());
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwt);
+        return claimsJws.getBody().get("id", Integer.class);
     }
 
     public String convertObjToJson(Object e) throws JsonProcessingException {

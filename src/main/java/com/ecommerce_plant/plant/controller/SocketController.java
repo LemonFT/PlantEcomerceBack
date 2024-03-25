@@ -37,13 +37,20 @@ public class SocketController {
         Dotenv dotenv = Dotenv.load();
         int admin_role = Integer.parseInt(dotenv.get("REACT_APP_ADMIN_ROLE"));
         User user = userService.getUser(message.getUser_send_id());
+        System.err.println(message.toString());
         if (user.getRole_id() == admin_role) {
             messagingTemplate.convertAndSendToUser(String.valueOf(admin_role), "/queue/reply",
                     "Message admin reply");
         } else {
+            System.err.println("customer");
             messagingTemplate.convertAndSendToUser("customers", "/queue/reply", "Message customer reply");
         }
-        messageService.insertMessage(message);
+        try {
+            String rs = messageService.insertMessage(message);
+            System.err.println("result insert: " + rs);
+        } catch (Exception e) {
+            System.err.println("false insert");
+        }
     }
 
     @MessageMapping("/testService")

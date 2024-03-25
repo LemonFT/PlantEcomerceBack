@@ -15,6 +15,7 @@ public class Product {
     private int id;
     private String code;
     private String name;
+    private String image;
     private int category_product_id;
     private String description;
     private int amount;
@@ -22,4 +23,5 @@ public class Product {
     private float voucher;
     private boolean display;
     private boolean deleted;
+
 }

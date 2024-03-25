@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactUser {
-    private int user_id;
-    private String address_category;
-    private String address;
-    private String phone_number;
+@ToString
+public class ProductImage {
+    private int product_id;
+    private String image;
 }

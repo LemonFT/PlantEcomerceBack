@@ -18,6 +18,57 @@ public class ProductService {
         return productRep.findAllProducts();
     }
 
+    public Product getProduct(int product_id) {
+        return productRep.findProduct(product_id);
+    }
+
+    public boolean productSoldOut(int product_id) {
+        return !productRep.findProduct(product_id).isDisplay();
+    }
+
+    public List<Product> getProductOfPageNum(String search, String min, String max, int[] category_ids, int pageNum,
+            int numPerPage) {
+        int skipProductNum = (pageNum - 1) * numPerPage;
+        Double minDouble, maxDouble;
+        try {
+            minDouble = Double.parseDouble(min);
+        } catch (Exception e) {
+            minDouble = null;
+        }
+        try {
+            maxDouble = Double.parseDouble(max);
+        } catch (Exception e) {
+            maxDouble = null;
+        }
+
+        return productRep.findProductOfPageNum(search, minDouble, maxDouble, category_ids, numPerPage,
+                skipProductNum);
+    }
+
+    public int getTotalAmountFilter(String search, String min, String max, int[] category_ids) {
+        Double minDouble, maxDouble;
+        try {
+            minDouble = Double.parseDouble(min);
+        } catch (Exception e) {
+            minDouble = null;
+        }
+        try {
+            maxDouble = Double.parseDouble(max);
+        } catch (Exception e) {
+            maxDouble = null;
+        }
+        return productRep.totalAmountOfFilter(search, minDouble, maxDouble, category_ids);
+    }
+
+    public Double getMaxPrice() {
+        try {
+            Double maxPrice = productRep.maxPriceProduct();
+            return maxPrice;
+        } catch (Exception e) {
+            return 1000000.0;
+        }
+    }
+
     public String insertProduct(Product product) {
         product.setDisplay(true);
         product.setDeleted(false);
@@ -29,6 +80,10 @@ public class ProductService {
         product.setDeleted(false);
         boolean result = productRep.updateProduct(product);
         return result ? "Update successfully" : "Update fasle";
+    }
+
+    public boolean updateImageProduct(int id, String image) {
+        return productRep.updateProductImage(id, image);
     }
 
     public String deleteProduct(int id) {

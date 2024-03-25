@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContactCategory {
+public class Permission {
     private int id;
     private String name;
+    private String descr;
 }

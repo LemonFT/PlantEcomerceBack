@@ -14,20 +14,43 @@ public class ContactUserRep {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<ContactUser> findAllContactUsers() {
-        String sql = "SELECT * FROM contact_user";
-        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(ContactUser.class));
+    @SuppressWarnings("deprecation")
+    public List<ContactUser> findAllContactUsers(int user_id) {
+        String sql = "SELECT * FROM contact_user where user_id = ?";
+        try {
+            return jdbcTemplate.query(sql, new Object[] { user_id },
+                    BeanPropertyRowMapper.newInstance(ContactUser.class));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean checkExistContact(ContactUser contactUser) {
+        String sql = "SELECT * FROM contact_user where user_id = ? and address_category = ? and address = ? and phone_number = ?";
+        try {
+            @SuppressWarnings("deprecation")
+            List<ContactUser> contactUsers = jdbcTemplate.query(sql,
+                    new Object[] { contactUser.getUser_id(), contactUser.getAddress_category(),
+                            contactUser.getAddress(), contactUser.getPhone_number() },
+                    BeanPropertyRowMapper.newInstance(ContactUser.class));
+            if (!contactUsers.isEmpty()) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 
     public boolean insertContactUser(ContactUser contactUser) {
-        String sql = "INSERT INTO contact_user (user_id, address_category_id, address, phone_number) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, contactUser.getUser_id(), contactUser.getAddress_category_id(),
+        String sql = "INSERT INTO contact_user (user_id, address_category, address, phone_number) VALUES (?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, contactUser.getUser_id(), contactUser.getAddress_category(),
                 contactUser.getAddress(), contactUser.getPhone_number()) > 0;
     }
 
     public boolean updateContactUser(ContactUser contactUser) {
-        String sql = "UPDATE contact_user SET address_category_id = ?, address = ?, phone_number = ? WHERE user_id = ?";
-        return jdbcTemplate.update(sql, contactUser.getAddress_category_id(), contactUser.getAddress(),
+        String sql = "UPDATE contact_user SET address_category = ?, address = ?, phone_number = ? WHERE user_id = ?";
+        return jdbcTemplate.update(sql, contactUser.getAddress_category(), contactUser.getAddress(),
                 contactUser.getPhone_number(), contactUser.getUser_id()) > 0;
     }
 

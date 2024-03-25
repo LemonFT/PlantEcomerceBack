@@ -28,6 +28,7 @@ public class MessageMapping {
             if (admin_role == user.getRole_id()) {
                 user.setRole_id(ROLE_ID_FAKE);
             }
+            user.setPassword("");
             messageModelMaps.add(new MessageModelMap(user, message));
         }
         return messageModelMaps;

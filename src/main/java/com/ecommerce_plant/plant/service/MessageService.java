@@ -36,6 +36,10 @@ public class MessageService {
     public String insertMessage(Message message) {
         if (message.getUser_receive_id() == 0) {
             User admin = userService.getUserIsAdmin();
+            if (admin == null) {
+                System.err.println("admin null");
+                return "";
+            }
             message.setUser_receive_id(admin.getId());
             message.setTime(new Date());
         } else {
